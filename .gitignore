@@ -1,0 +1,20 @@
+# 의존성 및 설치 파일 무시
+node_modules/
+**/node_modules/
+npm-debug.log
+pnpm-debug.log
+yarn-error.log
+
+# 빌드 산출물 무시
+dist/
+build/
+out/
+
+# 환경 변수 및 기타 민감 파일
+.env
+.env.local
+.DS_Store
+
+# 도커 및 시스템 디렉토리 볼륨 캐시
+.data/
+pgdata/

@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    image: kids-art-app
+    container_name: kids-art-app
+    ports:
+      - "5173:5173"
+    volumes:
+      # 소스 수정 시 컨테이너에 실시간 반영 (Hot Reload)
+      - ./src:/app/src
+      - ./index.html:/app/index.html
+    restart: unless-stopped

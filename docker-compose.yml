@@ -1,0 +1,54 @@
+services:
+  # 1) Frontend 서비스 (React + Vite)
+  frontend:
+    build:
+      context: ./frontend
+      target: dev
+    image: kids-art-app-frontend
+    container_name: kids-art-app-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/index.html:/app/index.html
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  # 2) Backend 서비스 (Node.js + Express)
+  backend:
+    build:
+      context: ./backend
+      target: dev
+    image: kids-art-app-backend
+    container_name: kids-art-app-backend
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend/src:/app/src
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=art_app
+    restart: unless-stopped
+    depends_on:
+      - db
+
+  # 3) Local PostgreSQL DB
+  db:
+    image: postgres:16-alpine
+    container_name: kids-art-app-db
+    ports:
+      - "5432:5432"  # DataGrip으로 외부 연결할 포트
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=art_app
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:
