@@ -2,15 +2,15 @@ services:
   # 1) Frontend 서비스 (React + Vite)
   frontend:
     build:
-      context: ./frontend
+      context: ./apps/web
       target: dev
     image: kids-art-app-frontend
     container_name: kids-art-app-frontend
     ports:
       - "5173:5173"
     volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/index.html:/app/index.html
+      - ./apps/web/src:/app/src
+      - ./apps/web/index.html:/app/index.html
     restart: unless-stopped
     depends_on:
       - backend
@@ -18,14 +18,14 @@ services:
   # 2) Backend 서비스 (Node.js + Express)
   backend:
     build:
-      context: ./backend
+      context: ./apps/api
       target: dev
     image: kids-art-app-backend
     container_name: kids-art-app-backend
     ports:
       - "4000:4000"
     volumes:
-      - ./backend/src:/app/src
+      - ./apps/api/src:/app/src
     environment:
       - DB_HOST=db
       - DB_PORT=5432
