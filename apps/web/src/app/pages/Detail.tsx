@@ -39,22 +39,22 @@ export function Detail() {
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex flex-col">
       {/* Header */}
-      <header className="px-6 py-6 bg-white flex items-center justify-between shadow-sm z-10">
+      <header className="px-6 py-6 bg-white flex items-center justify-between shadow-sm z-10 glass">
         <button
           onClick={() => navigate("/")}
-          className="w-10 h-10 rounded-full bg-[#F3F4F6] flex items-center justify-center"
+          className="w-10 h-10 rounded-full bg-[#F3F4F6] flex items-center justify-center hover:bg-[#E5E7EB] transition-colors"
         >
           <ArrowLeft className="w-5 h-5 text-[#1F2937]" />
         </button>
-        <h3 className="text-[#1F2937]">{artwork.title}</h3>
+        <h3 className="text-[#1F2937] font-bold">둥둥 갤러리</h3>
         <div className="w-10" />
       </header>
 
       {/* 3D Viewer Section */}
-      <section className="relative h-[400px] bg-gradient-to-b from-white to-[#F9FAFB]">
+      <section className="relative h-[400px] bg-linear-to-b from-white to-[#F9FAFB] overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center">
           <motion.div
-            className="relative w-64 h-64 rounded-[24px] shadow-xl cursor-pointer"
+            className={`relative w-64 h-64 rounded-3xl shadow-2xl cursor-pointer ${isRotating ? '' : 'animate-float'}`}
             style={{ backgroundColor: artwork.color }}
             animate={isRotating ? { rotateY: 360 } : {}}
             transition={{
@@ -67,25 +67,25 @@ export function Detail() {
             <img
               src={artwork.thumbnail}
               alt={artwork.title}
-              className="w-full h-full object-cover rounded-[24px] opacity-70"
+              className="w-full h-full object-cover rounded-3xl opacity-70"
             />
 
             {/* 3D Effect Overlay */}
-            <div className="absolute inset-0 rounded-[24px] bg-gradient-to-tr from-black/10 via-transparent to-white/20" />
+            <div className="absolute inset-0 rounded-3xl bg-linear-to-tr from-black/10 via-transparent to-white/20" />
           </motion.div>
         </div>
 
         {/* 360° Swipe Indicator */}
         {!isRotating && (
           <motion.div
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full"
+            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full glass"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
             <Maximize2 className="w-4 h-4 text-white" />
-            <span className="text-white text-sm">
-              탭하여 회전
+            <span className="text-white text-sm font-medium">
+              탭하여 돌려보기
             </span>
           </motion.div>
         )}
@@ -95,23 +95,23 @@ export function Detail() {
       <div className="px-6 py-6">
         <motion.button
           onClick={handleARView}
-          className="w-full py-4 rounded-[20px] shadow-lg flex items-center justify-center gap-2"
+          className="w-full py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 glass border-none"
           style={{ backgroundColor: "#FEF08A" }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
           <Maximize2 className="w-5 h-5 text-[#1F2937]" />
-          <span className="text-[#1F2937]">AR로 보기</span>
+          <span className="text-[#1F2937] font-bold text-lg">우리 집에 소환하기 (AR)</span>
         </motion.button>
       </div>
 
       {/* Bottom Sheet - Artwork Info */}
-      <section className="flex-1 bg-white rounded-t-[32px] shadow-2xl px-6 py-6 overflow-y-auto">
+      <section className="flex-1 bg-white rounded-t-4xl shadow-2xl px-6 py-6 overflow-y-auto">
         {/* Original Drawing */}
         <div className="mb-6">
           <h4 className="text-[#1F2937] mb-3">원본 그림</h4>
           <div
-            className="w-full aspect-[4/3] rounded-[20px] overflow-hidden"
+            className="w-full aspect-4/3 rounded-3xl overflow-hidden"
             style={{ backgroundColor: artwork.color }}
           >
             <img
@@ -161,7 +161,7 @@ export function Detail() {
               {artwork.comments.map((comment) => (
                 <div
                   key={comment.id}
-                  className="bg-[#F9FAFB] rounded-[16px] p-4"
+                  className="bg-[#F9FAFB] rounded-2xl p-4"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-6 h-6 rounded-full bg-[#D1FAE5] flex items-center justify-center">
@@ -189,13 +189,13 @@ export function Detail() {
             <input
               type="text"
               value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value)}
               placeholder="따뜻한 응원 메시지를 남겨주세요"
-              className="flex-1 px-4 py-3 rounded-[16px] bg-[#F9FAFB] text-[#1F2937] placeholder:text-[#9CA3AF] outline-none focus:ring-2 focus:ring-[#D1FAE5]"
+              className="flex-1 px-4 py-3 rounded-2xl bg-[#F9FAFB] text-[#1F2937] placeholder:text-[#9CA3AF] outline-none focus:ring-2 focus:ring-[#D1FAE5]"
             />
             <button
               onClick={handleAddComment}
-              className="w-12 h-12 rounded-[16px] flex items-center justify-center"
+              className="w-12 h-12 rounded-2xl flex items-center justify-center"
               style={{
                 backgroundColor: newComment.trim()
                   ? "#D1FAE5"

@@ -16,34 +16,28 @@ export function Processing() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex flex-col items-center justify-center px-6">
-      {/* Breathing Glow Animation */}
+      {/* Breathing Glow & Floating Animation */}
       <div className="relative mb-12">
         <motion.div
-          className="w-32 h-32 rounded-full"
-          style={{
-            background: "linear-gradient(135deg, #FEF08A 0%, #D1FAE5 50%, #E0E7FF 100%)",
-          }}
+          className="w-32 h-32 rounded-full animate-float shadow-xl bg-linear-135 from-[#FEF08A] via-[#BAE6FD] to-[#DBEAFE]"
           animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.6, 0.9, 0.6],
+            scale: [1, 1.15, 1],
+            rotate: [0, 10, -10, 0],
           }}
           transition={{
-            duration: 2,
+            duration: 4,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
         <motion.div
-          className="absolute inset-0 w-32 h-32 rounded-full"
-          style={{
-            background: "linear-gradient(135deg, #E0E7FF 0%, #FEF08A 50%, #D1FAE5 100%)",
-          }}
+          className="absolute inset-0 w-32 h-32 rounded-full glass"
           animate={{
-            scale: [1.1, 1, 1.1],
-            opacity: [0.4, 0.7, 0.4],
+            scale: [1.2, 1, 1.2],
+            opacity: [0.2, 0.5, 0.2],
           }}
           transition={{
-            duration: 2,
+            duration: 3,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -52,9 +46,10 @@ export function Processing() {
 
       {/* Loading Text */}
       <div className="text-center">
-        <h2 className="text-[#1F2937] mb-3">그림에 생명을 불어넣는 중이에요</h2>
-        <p className="text-[#6B7280] text-sm max-w-xs mx-auto leading-relaxed">
-          AI가 2D 그림을 3D 모델로 변환하고 있어요. 잠시만 기다려주세요.
+        <h2 className="text-[#1F2937] mb-3 font-bold text-2xl">그림이 둥둥 떠오르고 있어요</h2>
+        <p className="text-[#6B7280] text-base max-w-xs mx-auto leading-relaxed">
+          AI가 아이의 소중한 낙서를<br />
+          마법처럼 3D로 만들고 있습니다.
         </p>
       </div>
 

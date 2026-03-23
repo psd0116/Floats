@@ -8,35 +8,26 @@ export function Home() {
     <div className="min-h-screen bg-[#F9FAFB]">
       {/* Header */}
       <header className="px-6 py-6 bg-white">
-        <h1 className="text-[#1F2937] mb-1">Art Archive</h1>
-        <p className="text-[#6B7280] text-sm">오늘의 바다는 어떤가요?</p>
+        <h1 className="text-[#1F2937] mb-1 font-bold text-3xl">둥둥</h1>
+        <p className="text-[#6B7280] text-sm">우리 아이 상상이 둥실 떠오르는 공간</p>
       </header>
 
       {/* Virtual Aquarium Hero Section */}
-      <section className="relative h-[280px] mx-6 mt-6 rounded-[24px] overflow-hidden bg-gradient-to-b from-[#DBEAFE] to-[#BAE6FD] shadow-sm">
+      <section className="relative h-[280px] mx-6 mt-6 rounded-3xl overflow-hidden bg-linear-to-b from-[#DBEAFE] to-[#BAE6FD] shadow-sm">
         <div className="absolute inset-0 flex items-center justify-center">
           {/* Floating Fish Animation */}
           <div className="relative w-full h-full">
             {artworks.slice(0, 3).map((art, index) => (
               <motion.div
                 key={art.id}
-                className="absolute"
+                className={`absolute ${index % 2 === 0 ? 'animate-float' : 'animate-float-delayed'}`}
                 style={{
                   left: `${20 + index * 30}%`,
                   top: `${30 + index * 15}%`,
                 }}
-                animate={{
-                  y: [0, -15, 0],
-                  x: [0, 10, 0],
-                }}
-                transition={{
-                  duration: 3 + index,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
               >
                 <div 
-                  className="w-16 h-16 rounded-[16px] shadow-lg"
+                  className="w-16 h-16 rounded-2xl shadow-lg"
                   style={{
                     backgroundColor: art.color,
                     opacity: 0.8,
@@ -48,12 +39,12 @@ export function Home() {
         </div>
 
         {/* Gentle Waves */}
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white/30 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-white/30 to-transparent" />
       </section>
 
       {/* Timeline Section */}
       <section className="px-6 py-8">
-        <h2 className="text-[#1F2937] mb-6">작품 타임라인</h2>
+        <h2 className="text-[#1F2937] mb-6">최근 소식</h2>
         
         <div className="space-y-4">
           {artworks.map((art, index) => (
@@ -64,11 +55,11 @@ export function Home() {
               transition={{ delay: index * 0.1 }}
             >
               <Link to={`/detail/${art.id}`}>
-                <div className="bg-white rounded-[24px] p-5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-white rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex gap-4">
                     {/* Thumbnail */}
                     <div 
-                      className="w-20 h-20 rounded-[16px] flex-shrink-0 overflow-hidden"
+                      className="w-20 h-20 rounded-2xl shrink-0 overflow-hidden"
                       style={{ backgroundColor: art.color }}
                     >
                       <img 
@@ -95,7 +86,7 @@ export function Home() {
                     </div>
 
                     {/* View Button */}
-                    <button className="flex-shrink-0 w-12 h-12 rounded-full bg-[#F3F4F6] flex items-center justify-center hover:bg-[#E5E7EB] transition-colors">
+                    <button className="shrink-0 w-12 h-12 rounded-full bg-[#F3F4F6] flex items-center justify-center hover:bg-[#E5E7EB] transition-colors">
                       <Eye className="w-5 h-5 text-[#6B7280]" />
                     </button>
                   </div>
@@ -109,7 +100,7 @@ export function Home() {
       {/* Floating Action Button */}
       <Link to="/upload">
         <motion.button
-          className="fixed bottom-8 right-6 w-16 h-16 rounded-full shadow-lg flex items-center justify-center"
+          className="fixed bottom-8 right-6 w-16 h-16 rounded-full shadow-xl flex items-center justify-center animate-float"
           style={{ backgroundColor: "#FEF08A" }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
