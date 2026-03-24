@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { HealthService } from '../services/health.service.js';
+import { HealthService } from './health.service.js';
 
 export class HealthController {
   static async getHealth(req: Request, res: Response) {

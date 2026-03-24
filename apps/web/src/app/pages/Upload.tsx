@@ -21,7 +21,7 @@ export function Upload() {
 
   const handleCapture = () => {
     if (imagePreview) {
-      navigate("/processing");
+      navigate("/processing", { state: { image: imagePreview } });
     } else {
       fileInputRef.current?.click();
     }

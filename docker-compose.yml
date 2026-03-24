@@ -27,11 +27,13 @@ services:
     volumes:
       - ./apps/api/src:/app/src
     environment:
-      - DB_HOST=db
+      - DATABASE_URL=postgresql://postgres:postgres@kids-art-app-db:5432/art_app
+      - DB_HOST=kids-art-app-db
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_NAME=art_app
+      - JWT_SECRET=floats-secret-key-12345
     restart: unless-stopped
     depends_on:
       - db

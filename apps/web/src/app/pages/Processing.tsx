@@ -1,18 +1,64 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router";
 import { motion } from "motion/react";
+import { API_BASE_URL } from "../types";
 
 export function Processing() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isProcessing = useRef(false);
 
   useEffect(() => {
-    // Simulate AI processing time
-    const timer = setTimeout(() => {
-      navigate("/detail/1");
-    }, 3000);
+    if (isProcessing.current) return;
+    
+    const imageData = location.state?.image;
+    if (!imageData) {
+      navigate("/upload");
+      return;
+    }
 
-    return () => clearTimeout(timer);
-  }, [navigate]);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
+
+    isProcessing.current = true;
+
+    const uploadArtwork = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/artworks`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            title: `나의 새로운 둥둥 (${new Date().toLocaleDateString()})`,
+            thumbnail: imageData,
+            tags: ['신규', '상상력']
+          })
+        });
+
+        const data = await response.json();
+        if (data.id) {
+          // Success: wait a bit for animation
+          setTimeout(() => {
+            navigate(`/detail/${data.id}`);
+          }, 2000);
+        } else {
+          throw new Error(data.error || 'Upload failed');
+        }
+      } catch (error) {
+        console.error("Upload error:", error);
+        alert("업로드에 실패했습니다. 다시 시도해주세요.");
+        navigate("/upload");
+      }
+    };
+
+    uploadArtwork();
+  }, [navigate, location.state]);
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex flex-col items-center justify-center px-6">
