@@ -16,17 +16,29 @@ model User {
   password  String
   name      String?
   artworks  Artwork[]
+  comments  Comment[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
 
 model Artwork {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   title     String
   thumbnail String
   tags      String[]
   color     String?
   userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
   user      User     @relation(fields: [userId], references: [id])
+  artworkId String
+  artwork   Artwork  @relation(fields: [artworkId], references: [id])
   createdAt DateTime @default(now())
 }

@@ -16,9 +16,17 @@ export function Detail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [artwork, setArtwork] = useState<Artwork | null>(null);
+  const [comments, setComments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRotating, setIsRotating] = useState(false);
   const [newComment, setNewComment] = useState("");
+
+  const fetchComments = (artworkId: string) => {
+    fetch(`${API_BASE_URL}/api/comments?artworkId=${artworkId}`)
+      .then(res => res.json())
+      .then(data => setComments(Array.isArray(data) ? data : []))
+      .catch(err => console.error("Failed to fetch comments", err));
+  };
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/artworks/${id}`)
@@ -28,6 +36,7 @@ export function Detail() {
           setArtwork(null);
         } else {
           setArtwork(data);
+          fetchComments(data.id);
         }
         setIsLoading(false);
       })
@@ -63,10 +72,39 @@ export function Detail() {
     alert("AR 뷰어가 실행됩니다. 실제 환경에서는 카메라를 통해 3D 모델을 볼 수 있어요.");
   };
 
-  const handleAddComment = () => {
-    if (newComment.trim()) {
-      alert(`댓글 기능은 곧 추가될 예정입니다: ${newComment}`);
-      setNewComment("");
+  const handleAddComment = async () => {
+    if (!newComment.trim()) return;
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          artworkId: artwork.id,
+          content: newComment
+        })
+      });
+
+      if (response.ok) {
+        setNewComment("");
+        fetchComments(artwork.id); // Refresh comments
+      } else {
+        const data = await response.json();
+        alert(data.error || "댓글 작성에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("Comment error:", error);
+      alert("문제가 발생했습니다. 다시 시도해 주세요.");
     }
   };
 
@@ -151,12 +189,33 @@ export function Detail() {
           </motion.button>
         </div>
 
-        {/* Placeholder for real comments if implemented later */}
+        {/* Real Comments Section */}
         <div className="border-t-2 border-white/60 pt-8 mt-4">
-          <h4 className="text-xl font-extrabold text-[#333333] mb-6">가족 댓글</h4>
+          <h4 className="text-xl font-extrabold text-[#333333] mb-6">가족 댓글 ({comments.length})</h4>
           
-          <div className="text-center py-10 bg-white/40 rounded-[32px] border-2 border-dashed border-white/60 mb-8">
-             <p className="text-[#9CA3AF] text-sm font-bold">아직 댓글이 없어요. 첫 번째 응원을 남겨보세요!</p>
+          <div className="space-y-4 mb-8">
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <motion.div 
+                  key={comment.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="bg-white/40 p-5 rounded-[28px] border-2 border-white/60 shadow-sm"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="text-sm font-extrabold text-[#333333]">{comment.user?.name || "익명"}</span>
+                    <span className="text-[10px] font-bold text-[#9CA3AF] uppercase tracking-tighter">
+                      {new Date(comment.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                  <p className="text-[#717182] text-sm leading-relaxed">{comment.content}</p>
+                </motion.div>
+              ))
+            ) : (
+              <div className="text-center py-10 bg-white/40 rounded-[32px] border-2 border-dashed border-white/60">
+                <p className="text-[#9CA3AF] text-sm font-bold">아직 댓글이 없어요. 첫 번째 응원을 남겨보세요!</p>
+              </div>
+            )}
           </div>
 
           <div className="flex gap-3">
@@ -164,6 +223,7 @@ export function Detail() {
               type="text"
               value={newComment}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAddComment()}
               placeholder="따뜻한 응원 메시지를 남겨주세요"
               className="flex-1 px-6 py-4 rounded-3xl bg-white border-2 border-white shadow-inner text-[#333333] placeholder:text-[#9CA3AF] outline-none focus:border-accent-rose/30 transition-all font-medium"
             />
