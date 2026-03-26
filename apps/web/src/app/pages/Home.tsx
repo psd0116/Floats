@@ -9,11 +9,17 @@ import type { Artwork } from "../types";
 
 export function Home() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [activeTab, setActiveTab] = useState<'family' | 'public'>('public'); // Default to public to see content
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/artworks`)
+    setIsLoading(true);
+    const token = localStorage.getItem("token");
+    const headers: any = {};
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
+    fetch(`${API_BASE_URL}/api/artworks?type=${activeTab}`, { headers })
       .then(res => res.json())
       .then(data => {
         setArtworks(Array.isArray(data) ? data : []);
@@ -23,7 +29,7 @@ export function Home() {
         console.error("Failed to fetch artworks", err);
         setIsLoading(false);
       });
-  }, []);
+  }, [activeTab]);
 
   const navItems = [
     { title: "나의 갤러리", icon: <Palette className="w-6 h-6" />, color: "bg-accent-rose/20", textColor: "text-accent-rose", path: "/gallery" },
@@ -121,9 +127,27 @@ export function Home() {
 
       {/* Recent Activity Board */}
       <section className="px-6 pb-24">
-        <div className="flex items-center justify-between mb-6 px-2">
-          <h2 className="text-[#333333] text-xl font-extrabold tracking-tight">최근 창작물</h2>
-          <Link to="/gallery" className="text-xs font-bold text-[#717182] hover:text-[#333333] bg-white/50 px-3 py-1.5 rounded-full border border-white/60">전체보기</Link>
+        <div className="flex flex-col mb-6 px-2 gap-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-[#333333] text-xl font-extrabold tracking-tight">작품 둘러보기</h2>
+            <Link to="/gallery" className="text-xs font-bold text-[#717182] hover:text-[#333333] bg-white/50 px-3 py-1.5 rounded-full border border-white/60">전체보기</Link>
+          </div>
+
+          {/* Toggle Tabs */}
+          <div className="flex p-1 bg-white/40 backdrop-blur-md rounded-2xl border border-white/60 shadow-sm w-fit">
+            <button
+              onClick={() => setActiveTab('family')}
+              className={`px-5 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'family' ? 'bg-white text-[#333333] shadow-sm' : 'text-[#9CA3AF]'}`}
+            >
+              우리 가족
+            </button>
+            <button
+              onClick={() => setActiveTab('public')}
+              className={`px-5 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'public' ? 'bg-white text-[#333333] shadow-sm' : 'text-[#9CA3AF]'}`}
+            >
+              공개 광장
+            </button>
+          </div>
         </div>
         
         <div className="space-y-4">

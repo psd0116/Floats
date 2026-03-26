@@ -9,6 +9,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [familyCode, setFamilyCode] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export default function Login() {
 
     try {
       const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup";
-      const body = isLogin ? { email, password } : { email, password, name };
+      const body = isLogin ? { email, password } : { email, password, name, familyCode };
 
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: "POST",
@@ -81,21 +82,39 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {!isLogin && (
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-[#717182] uppercase ml-1">이름</label>
-                <div className="relative">
-                  <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF]" />
-                  <input 
-                    type="text" 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-[#F3F4ED] border border-[#E5E7EB] rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-accent-sky/30 transition-all font-medium disabled:opacity-50"
-                    placeholder="이름을 입력하세요"
-                    required
-                    disabled={isLoading}
-                  />
+              <>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-[#717182] uppercase ml-1">이름</label>
+                  <div className="relative">
+                    <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF]" />
+                    <input 
+                      type="text" 
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full bg-[#F3F4ED] border border-[#E5E7EB] rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-accent-sky/30 transition-all font-medium disabled:opacity-50"
+                      placeholder="이름을 입력하세요"
+                      required
+                      disabled={isLoading}
+                    />
+                  </div>
                 </div>
-              </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-[#717182] uppercase ml-1">가족 코드 (선택)</label>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF]" />
+                    <input 
+                      type="text" 
+                      value={familyCode}
+                      onChange={(e) => setFamilyCode(e.target.value)}
+                      className="w-full bg-[#F3F4ED] border border-[#E5E7EB] rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-accent-sky/30 transition-all font-medium disabled:opacity-50"
+                      placeholder="기존 가족 코드가 있다면 입력하세요"
+                      disabled={isLoading}
+                    />
+                  </div>
+                  <p className="text-[10px] text-[#9CA3AF] ml-1">* 입력하지 않으면 새로운 가족 코드가 생성됩니다.</p>
+                </div>
+              </>
             )}
 
             <div className="space-y-2">

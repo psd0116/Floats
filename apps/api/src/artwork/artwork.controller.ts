@@ -1,10 +1,23 @@
 import type { Request, Response } from 'express';
 import { ArtworkService } from './artwork.service.js';
+import { prisma } from '../db/prisma.js';
 
 export class ArtworkController {
-  static async getRecentArtworks(req: Request, res: Response) {
+  static async getRecentArtworks(req: any, res: Response) {
     try {
-      const artworks = await ArtworkService.getAllArtworks();
+      const { type } = req.query; // 'family' or 'public'
+      const filters: any = {};
+
+      if (type === 'public') {
+        filters.isPublic = true;
+      } else {
+        // Default to family, requires login
+        if (!req.userId) return res.status(401).json({ error: 'Authentication required' });
+        const user = await prisma.user.findUnique({ where: { id: req.userId }, select: { familyCode: true } });
+        filters.familyCode = user?.familyCode;
+      }
+
+      const artworks = await ArtworkService.getAllArtworks(filters);
       res.status(200).json(artworks);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
@@ -22,8 +35,8 @@ export class ArtworkController {
 
   static async createArtwork(req: any, res: Response) {
     try {
-      const { title, thumbnail, tags } = req.body;
-      const artwork = await ArtworkService.createArtwork(req.userId, { title, thumbnail, tags });
+      const { title, thumbnail, tags, isPublic } = req.body;
+      const artwork = await ArtworkService.createArtwork(req.userId, { title, thumbnail, tags, isPublic });
       res.status(201).json(artwork);
     } catch (error: any) {
       res.status(500).json({ error: error.message });

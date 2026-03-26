@@ -1,11 +1,12 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router";
-import { X, Camera as CameraIcon } from "lucide-react";
+import { X, Camera as CameraIcon, Eye } from "lucide-react";
 import { motion } from "motion/react";
 
 export function Upload() {
   const navigate = useNavigate();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isPublic, setIsPublic] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +22,7 @@ export function Upload() {
 
   const handleCapture = () => {
     if (imagePreview) {
-      navigate("/processing", { state: { image: imagePreview } });
+      navigate("/processing", { state: { image: imagePreview, isPublic } });
     } else {
       fileInputRef.current?.click();
     }
@@ -75,6 +76,21 @@ export function Upload() {
 
       {/* Bottom Controls */}
       <div className="pb-12 px-6">
+        {imagePreview && (
+          <div className="flex justify-center mb-6">
+            <button
+              onClick={() => setIsPublic(!isPublic)}
+              className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all border-2 flex items-center gap-2 ${
+                isPublic 
+                  ? "bg-accent-sky border-accent-sky text-white" 
+                  : "bg-white/10 border-white/20 text-white/70"
+              }`}
+            >
+              <Eye className={`w-4 h-4 ${isPublic ? "text-white" : "text-white/50"}`} />
+              {isPublic ? "모두에게 공개하기" : "가족끼리만 보기"}
+            </button>
+          </div>
+        )}
         <div className="text-center mb-6">
           <p className="text-white/70 text-sm">
             {imagePreview ? "사진이 선명한지 확인해주세요" : "아이의 그림을 둥둥으로 보내볼까요?"}

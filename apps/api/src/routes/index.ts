@@ -15,7 +15,7 @@ router.post('/auth/login', AuthController.login);
 router.get('/auth/me', authMiddleware, AuthController.getMe);
 
 // Artwork Routes
-router.get('/artworks', ArtworkController.getRecentArtworks);
+router.get('/artworks', authMiddleware, ArtworkController.getRecentArtworks);
 router.get('/artworks/my', authMiddleware, ArtworkController.getMyArtworks);
 router.post('/artworks', authMiddleware, ArtworkController.createArtwork);
 router.get('/artworks/:id', ArtworkController.getArtworkDetail);

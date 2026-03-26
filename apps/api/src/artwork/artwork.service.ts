@@ -1,12 +1,21 @@
 import { prisma } from '../db/prisma.js';
 
 export class ArtworkService {
-  static async getAllArtworks() {
+  static async getAllArtworks(filters: { familyCode?: string; isPublic?: boolean } = {}) {
+    const where: any = {};
+    
+    if (filters.isPublic) {
+      where.isPublic = true;
+    } else if (filters.familyCode) {
+      where.user = { familyCode: filters.familyCode };
+    }
+
     return await prisma.artwork.findMany({
+      where,
       orderBy: { createdAt: 'desc' },
       include: {
         user: {
-          select: { name: true }
+          select: { name: true, familyCode: true }
         }
       }
     });
@@ -19,12 +28,13 @@ export class ArtworkService {
     });
   }
 
-  static async createArtwork(userId: string, data: { title: string; thumbnail: string; tags?: string[] }) {
+  static async createArtwork(userId: string, data: { title: string; thumbnail: string; tags?: string[]; isPublic?: boolean }) {
     return await prisma.artwork.create({
       data: {
         title: data.title,
         thumbnail: data.thumbnail,
         tags: data.tags || [],
+        isPublic: data.isPublic || false,
         userId
       }
     });

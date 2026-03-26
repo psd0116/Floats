@@ -2,23 +2,25 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+  // url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  password  String
-  name      String?
-  artworks  Artwork[]
-  comments  Comment[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id         String    @id @default(cuid())
+  email      String    @unique
+  password   String
+  name       String?
+  familyCode String
+  artworks   Artwork[]
+  comments   Comment[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model Artwork {
@@ -27,6 +29,7 @@ model Artwork {
   thumbnail String
   tags      String[]
   color     String?
+  isPublic  Boolean   @default(false)
   userId    String
   user      User      @relation(fields: [userId], references: [id])
   comments  Comment[]

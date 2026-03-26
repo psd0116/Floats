@@ -12,6 +12,7 @@ export function Processing() {
     if (isProcessing.current) return;
     
     const imageData = location.state?.image;
+    const isPublic = location.state?.isPublic || false;
     if (!imageData) {
       navigate("/upload");
       return;
@@ -37,7 +38,8 @@ export function Processing() {
           body: JSON.stringify({
             title: `나의 새로운 둥둥 (${new Date().toLocaleDateString()})`,
             thumbnail: imageData,
-            tags: ['신규', '상상력']
+            tags: ['신규', '상상력'],
+            isPublic
           })
         });
 

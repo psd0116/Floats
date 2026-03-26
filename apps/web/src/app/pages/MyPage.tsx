@@ -48,6 +48,11 @@ export default function MyPage() {
     navigate("/login");
   };
 
+  const copyFamilyCode = () => {
+    navigator.clipboard.writeText(storedUser.familyCode || "");
+    alert("가족 코드가 복사되었습니다!");
+  };
+
   return (
     <div className="min-h-screen bg-background-comfort pb-20">
       {/* Profile Header */}
@@ -59,7 +64,16 @@ export default function MyPage() {
             </div>
             <div>
               <h1 className="text-2xl font-extrabold text-[#333333] mb-1">{user.name}</h1>
-              <p className="text-xs font-bold text-[#9CA3AF] uppercase tracking-wider">{user.email}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-xs font-bold text-[#9CA3AF] uppercase tracking-wider">{user.email}</p>
+                <div className="h-3 w-[1px] bg-[#E5E7EB]" />
+                <button 
+                  onClick={copyFamilyCode}
+                  className="text-[10px] font-extrabold text-accent-sky hover:underline flex items-center gap-1"
+                >
+                  코드: {storedUser.familyCode}
+                </button>
+              </div>
             </div>
           </div>
           <button className="p-3 rounded-2xl bg-white border border-[#E5E7EB] shadow-sm text-[#717182] hover:bg-[#F9FAFB] transition-colors">
