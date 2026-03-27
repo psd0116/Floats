@@ -16,6 +16,7 @@ model User {
   email      String    @unique
   password   String
   name       String?
+  avatar     String    @default("🐰")
   familyCode String
   artworks   Artwork[]
   comments   Comment[]

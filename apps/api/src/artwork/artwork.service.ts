@@ -50,4 +50,14 @@ export class ArtworkService {
       }
     });
   }
+
+  static async deleteArtwork(id: string, userId: string) {
+    const artwork = await prisma.artwork.findUnique({ where: { id } });
+    if (!artwork) throw new Error('Artwork not found');
+    if (artwork.userId !== userId) throw new Error('Not authorized');
+    
+    // 댓글 먼저 삭제 후 작품 삭제
+    await (prisma.comment as any).deleteMany({ where: { artworkId: id } });
+    return await prisma.artwork.delete({ where: { id } });
+  }
 }

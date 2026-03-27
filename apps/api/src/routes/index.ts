@@ -4,6 +4,7 @@ import { AuthController } from '../auth/auth.controller.js';
 import { authMiddleware } from '../auth/auth.middleware.js';
 import { ArtworkController } from '../artwork/artwork.controller.js';
 import { CommentController } from '../comment/comment.controller.js';
+import { UserController } from '../user/user.controller.js';
 
 export const router = Router();
 
@@ -19,7 +20,15 @@ router.get('/artworks', authMiddleware, ArtworkController.getRecentArtworks);
 router.get('/artworks/my', authMiddleware, ArtworkController.getMyArtworks);
 router.post('/artworks', authMiddleware, ArtworkController.createArtwork);
 router.get('/artworks/:id', ArtworkController.getArtworkDetail);
+router.delete('/artworks/:id', authMiddleware, ArtworkController.deleteArtwork);
 
 // Comment Routes
 router.post('/comments', authMiddleware, CommentController.createComment);
 router.get('/comments', CommentController.getComments);
+
+// User / MyPage Routes
+router.get('/user/stats', authMiddleware, UserController.getMyStats);
+router.get('/user/calendar', authMiddleware, UserController.getActivityCalendar);
+router.get('/user/badges', authMiddleware, UserController.getBadges);
+router.get('/user/family', authMiddleware, UserController.getFamilyMembers);
+router.put('/user/profile', authMiddleware, UserController.updateProfile);

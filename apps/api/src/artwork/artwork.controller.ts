@@ -53,4 +53,15 @@ export class ArtworkController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  static async deleteArtwork(req: any, res: Response) {
+    try {
+      const id = req.params.id as string;
+      await ArtworkService.deleteArtwork(id, req.userId);
+      res.status(200).json({ message: 'Artwork deleted' });
+    } catch (error: any) {
+      const status = error.message === 'Not authorized' ? 403 : error.message === 'Artwork not found' ? 404 : 500;
+      res.status(status).json({ error: error.message });
+    }
+  }
 }
