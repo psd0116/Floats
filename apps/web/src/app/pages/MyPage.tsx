@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { Settings, LogOut, ChevronRight, Grid, List, Loader2, Copy, Check, X, Trash2, Globe, Lock, PenTool, Calendar as CalendarIcon, Users, Edit3 } from "lucide-react";
+import { Settings, LogOut, ChevronRight, Grid, List, Loader2, Copy, Check, X, Trash2, Globe, Lock, PenTool, Calendar as CalendarIcon, Users, Edit3, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../types";
@@ -199,39 +199,42 @@ export default function MyPage() {
         </div>
       </section>
 
-      {/* --- Activity Calendar (잔디밭) --- */}
+      {/* --- Activity Calendar (칭찬 스티커판) --- */}
       <section className="px-6 mt-10">
-        <h2 className="text-lg font-black text-[#1F2937] mb-4 flex items-center gap-2">
-          <CalendarIcon className="w-5 h-5 text-accent-sky" /> 꼬마 화가의 잔디밭
-        </h2>
-        <div className="bg-white p-5 rounded-[28px] shadow-sm overflow-x-auto">
-          {calendar.length > 0 ? (
-            <div className="flex flex-col gap-1 w-max">
-              {/* 12주 컬럼, 각 컬럼당 7일 (Row 단위 렌더링) */}
-              {Array.from({ length: 7 }).map((_, dayIndex) => (
-                <div key={dayIndex} className="flex gap-1">
-                  {Array.from({ length: 12 }).map((_, weekIndex) => {
-                    const record = calendar[weekIndex * 7 + dayIndex];
-                    if (!record) return <div key={weekIndex} className="w-3.5 h-3.5 rounded-sm bg-transparent" />;
-                    let color = 'bg-[#EBEDF0]';
-                    if (record.count === 1) color = 'bg-[#9BE9A8]';
-                    else if (record.count === 2) color = 'bg-[#40C463]';
-                    else if (record.count >= 3) color = 'bg-[#30A14E]';
-                    return (
-                      <div 
-                        key={weekIndex} 
-                        className={`w-3.5 h-3.5 rounded-[4px] ${color}`} 
-                        title={`${record.date}: ${record.count}개 작품`}
-                      />
-                    );
-                  })}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-black text-[#1F2937] flex items-center gap-2">
+            <Star className="w-5 h-5 text-amber-400 fill-amber-400" /> 이번 달 칭찬 스티커판
+          </h2>
+          <span className="text-[11px] font-black text-amber-600 bg-amber-100 px-3 py-1.5 rounded-full shadow-sm">
+            {calendar.slice(-30).filter(r => r.count > 0).length} / 30개
+          </span>
+        </div>
+        <div className="bg-white p-5 rounded-[32px] shadow-sm border-[4px] border-[#FFF0F4]">
+          <div className="grid grid-cols-6 gap-2">
+            {Array.from({ length: 30 }).map((_, i) => {
+              const earnedCount = calendar.slice(-30).filter(r => r.count > 0).length;
+              const isEarned = i < earnedCount;
+              const stickers = ['⭐', '🎀', '🎨', '🌈', '🦄', '🎈', '🧸', '🍭'];
+              const sticker = stickers[i % stickers.length];
+              
+              return (
+                <div 
+                  key={i}
+                  className={`aspect-square rounded-full flex items-center justify-center text-xl sm:text-2xl transition-all ${
+                    isEarned 
+                      ? 'bg-amber-100 shadow-sm transform hover:scale-110' 
+                      : 'bg-[#F9FAFB] border-2 border-dashed border-[#E5E7EB] opacity-60'
+                  }`}
+                >
+                  {isEarned ? sticker : ''}
                 </div>
-              ))}
+              );
+            })}
+          </div>
+          {calendar.slice(-30).filter(r => r.count > 0).length >= 30 && (
+            <div className="mt-5 p-3 bg-gradient-to-r from-amber-200 to-yellow-400 rounded-2xl text-center shadow-lg transform -rotate-1">
+              <p className="text-sm font-black text-amber-900">🎉 와! 스티커판을 다 채웠어요! 멋져요! 🎉</p>
             </div>
-          ) : (
-             <div className="h-28 flex items-center justify-center text-sm font-bold text-[#9CA3AF]">
-               로딩 중이거나 데이터가 없습니다.
-             </div>
           )}
         </div>
       </section>
