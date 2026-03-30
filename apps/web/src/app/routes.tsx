@@ -5,6 +5,7 @@ import { Detail } from "./pages/Detail";
 import { Processing } from "./pages/Processing";
 import Login from "./pages/Login";
 import MyPage from "./pages/MyPage";
+import { Gallery } from "./pages/Gallery";
 
 export const router = createBrowserRouter([
   {
@@ -31,5 +32,8 @@ export const router = createBrowserRouter([
     path: "/detail/:id",
     Component: Detail,
   },
+  {
+    path: "/gallery",
+    Component: Gallery,
+  },
 ]);
-
