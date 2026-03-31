@@ -6,6 +6,8 @@ import { Processing } from "./pages/Processing";
 import Login from "./pages/Login";
 import MyPage from "./pages/MyPage";
 import { Gallery } from "./pages/Gallery";
+import { Aquarium } from "./pages/Aquarium";
+import { Plaza } from "./pages/Plaza";
 
 export const router = createBrowserRouter([
   {
@@ -35,5 +37,13 @@ export const router = createBrowserRouter([
   {
     path: "/gallery",
     Component: Gallery,
+  },
+  {
+    path: "/aquarium",
+    Component: Aquarium,
+  },
+  {
+    path: "/plaza",
+    Component: Plaza,
   },
 ]);

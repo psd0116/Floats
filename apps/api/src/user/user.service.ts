@@ -28,11 +28,14 @@ export class UserService {
       }))].sort((a: any, b: any) => b - a) as number[];
 
       // 오늘 또는 어제부터 시작
-      const startDate = dates[0] === today.getTime() ? today.getTime() : today.getTime() - 86400000;
-      if (dates[0] >= startDate) {
+      const firstDate = dates[0] as number;
+      const startDate = firstDate === today.getTime() ? today.getTime() : today.getTime() - 86400000;
+      if (firstDate >= startDate) {
         streak = 1;
         for (let i = 1; i < dates.length; i++) {
-          if (dates[i - 1] - dates[i] === 86400000) {
+          const prevDate = dates[i - 1] as number;
+          const currDate = dates[i] as number;
+          if (prevDate - currDate === 86400000) {
             streak++;
           } else {
             break;
@@ -61,16 +64,18 @@ export class UserService {
     // 날짜별 카운트 맵
     const dateMap: Record<string, number> = {};
     artworks.forEach((a: any) => {
-      const key = new Date(a.createdAt).toISOString().split('T')[0];
-      dateMap[key] = (dateMap[key] || 0) + 1;
+      const parts = new Date(a.createdAt).toISOString().split('T');
+      const key = parts[0] as string;
+      const currentCount = dateMap[key] || 0;
+      dateMap[key] = currentCount + 1;
     });
 
-    // 12주 × 7일 배열 생성
     const calendar: { date: string; count: number }[] = [];
     for (let i = 83; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      const key = d.toISOString().split('T')[0];
+      const parts = d.toISOString().split('T');
+      const key = parts[0] as string;
       calendar.push({ date: key, count: dateMap[key] || 0 });
     }
 
@@ -99,7 +104,9 @@ export class UserService {
     if (dates.length > 0) {
       let currentStreak = 1;
       for (let i = 1; i < dates.length; i++) {
-        if (dates[i - 1] - dates[i] === 86400000) {
+        const prevD = dates[i - 1] as number;
+        const currD = dates[i] as number;
+        if (prevD - currD === 86400000) {
           currentStreak++;
         } else {
           maxStreak = Math.max(maxStreak, currentStreak);
