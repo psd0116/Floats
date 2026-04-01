@@ -8,6 +8,8 @@ import MyPage from "./pages/MyPage";
 import { Gallery } from "./pages/Gallery";
 import { Aquarium } from "./pages/Aquarium";
 import { Plaza } from "./pages/Plaza";
+import { Storybook } from "./pages/Storybook";
+import { Diary } from "./pages/Diary";
 
 export const router = createBrowserRouter([
   {
@@ -45,5 +47,13 @@ export const router = createBrowserRouter([
   {
     path: "/plaza",
     Component: Plaza,
+  },
+  {
+    path: "/storybook",
+    Component: Storybook,
+  },
+  {
+    path: "/diary",
+    Component: Diary,
   },
 ]);
