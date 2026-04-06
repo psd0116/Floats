@@ -10,6 +10,17 @@ export class AuthController {
         return res.status(400).json({ error: 'Email and password are required' });
       }
 
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: 'Invalid email format' });
+      }
+
+      // Validate password strength
+      if (password.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters' });
+      }
+
       const result = await AuthService.signup(email, password, name, familyCode);
       res.status(201).json({ 
         message: 'User created successfully',

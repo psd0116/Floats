@@ -1,4 +1,5 @@
 import { prisma } from '../db/prisma.js';
+import { S3Service } from '../aws/s3.service.js';
 
 export class ArtworkService {
   static async getAllArtworks(filters: { familyCode?: string; isPublic?: boolean } = {}) {
@@ -45,7 +46,7 @@ export class ArtworkService {
       where: { id },
       include: {
         user: {
-          select: { name: true }
+          select: { name: true, familyCode: true }
         }
       }
     });
@@ -56,6 +57,15 @@ export class ArtworkService {
     if (!artwork) throw new Error('Artwork not found');
     if (artwork.userId !== userId) throw new Error('Not authorized');
     
+    // Delete S3 image if it exists
+    if (artwork.thumbnail && artwork.thumbnail.includes('s3.')) {
+      try {
+        await S3Service.deleteImage(artwork.thumbnail);
+      } catch (err) {
+        console.error('Failed to delete S3 object (proceeding with DB delete):', err);
+      }
+    }
+
     // 댓글 먼저 삭제 후 작품 삭제
     await (prisma.comment as any).deleteMany({ where: { artworkId: id } });
     return await prisma.artwork.delete({ where: { id } });

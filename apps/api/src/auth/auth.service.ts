@@ -2,7 +2,10 @@ import { prisma } from '../db/prisma.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'floats-secret-key-12345';
+if (!process.env.JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is not set. Server cannot start safely.');
+}
+const JWT_SECRET: string = process.env.JWT_SECRET;
 
 export class AuthService {
   static async signup(email: string, password: string, name?: string, familyCode?: string) {

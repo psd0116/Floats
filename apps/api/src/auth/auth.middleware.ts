@@ -1,7 +1,10 @@
 import type { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'floats-secret-key-12345';
+if (!process.env.JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is not set.');
+}
+const JWT_SECRET: string = process.env.JWT_SECRET;
 
 export const authMiddleware = (req: any, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;

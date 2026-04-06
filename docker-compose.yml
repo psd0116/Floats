@@ -28,14 +28,8 @@ services:
       - ./apps/api/src:/app/src
       - ./apps/api/prisma:/app/prisma
       - ./apps/api/prisma.config.ts:/app/prisma.config.ts
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@kids-art-app-db:5432/art_app
-      - DB_HOST=kids-art-app-db
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=art_app
-      - JWT_SECRET=floats-secret-key-12345
+    env_file:
+      - ./apps/api/.env
     restart: unless-stopped
     depends_on:
       - db
@@ -44,12 +38,10 @@ services:
   db:
     image: postgres:16-alpine
     container_name: kids-art-app-db
-    ports:
-      - "5432:5432"  # DataGrip으로 외부 연결할 포트
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=art_app
+    # ports:
+    #   - "5432:5432"  # DataGrip으로 외부 연결할 포트 (보안을 위해 주석 처리)
+    env_file:
+      - ./apps/api/.env.db
     volumes:
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped

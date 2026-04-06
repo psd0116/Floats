@@ -6,12 +6,14 @@ import { motion } from "motion/react";
 export function Upload() {
   const navigate = useNavigate();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isPublic, setIsPublic] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onload = (event: ProgressEvent<FileReader>) => {
         setImagePreview(event.target?.result as string);
@@ -21,8 +23,8 @@ export function Upload() {
   };
 
   const handleCapture = () => {
-    if (imagePreview) {
-      navigate("/processing", { state: { image: imagePreview, isPublic } });
+    if (imagePreview && selectedFile) {
+      navigate("/processing", { state: { imageFile: selectedFile, imagePreview, isPublic } });
     } else {
       fileInputRef.current?.click();
     }

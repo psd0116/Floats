@@ -11,9 +11,9 @@ export function Processing() {
   useEffect(() => {
     if (isProcessing.current) return;
     
-    const imageData = location.state?.image;
+    const imageFile = location.state?.imageFile;
     const isPublic = location.state?.isPublic || false;
-    if (!imageData) {
+    if (!imageFile) {
       navigate("/upload");
       return;
     }
@@ -29,18 +29,18 @@ export function Processing() {
 
     const uploadArtwork = async () => {
       try {
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        formData.append('title', `나의 새로운 둥둥`);
+        formData.append('tags', JSON.stringify(['신규', '상상력']));
+        formData.append('isPublic', String(isPublic));
+
         const response = await fetch(`${API_BASE_URL}/api/artworks`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({
-            title: `나의 새로운 둥둥 (${new Date().toLocaleDateString()})`,
-            thumbnail: imageData,
-            tags: ['신규', '상상력'],
-            isPublic
-          })
+          body: formData
         });
 
         const data = await response.json();

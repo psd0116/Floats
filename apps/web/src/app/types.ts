@@ -41,4 +41,5 @@ export interface FamilyMember {
   artworkCount: number;
 }
 
-export const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:4000';
+// When using Vite proxy, API calls should just go to relative paths e.g. /api/...
+export const API_BASE_URL = '';
