@@ -13,6 +13,9 @@ export interface Artwork {
     user: { name: string; avatar?: string };
     createdAt: string;
   }>;
+  _count?: {
+    comments: number;
+  };
 }
 
 export interface UserStats {

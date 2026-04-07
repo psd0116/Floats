@@ -17,6 +17,9 @@ export class ArtworkService {
       include: {
         user: {
           select: { name: true, familyCode: true }
+        },
+        _count: {
+          select: { comments: true }
         }
       }
     });
@@ -25,7 +28,12 @@ export class ArtworkService {
   static async getArtworksByUserId(userId: string) {
     return await prisma.artwork.findMany({
       where: { userId },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      include: {
+        _count: {
+          select: { comments: true }
+        }
+      }
     });
   }
 
