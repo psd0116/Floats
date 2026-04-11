@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Camera, Eye, Palette, Fish, Book, BarChart3, User, Loader2, Compass, ArrowLeft } from "lucide-react";
+import { Camera, Palette, Fish, Book, BarChart3, User, Loader2, Compass, ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../types";

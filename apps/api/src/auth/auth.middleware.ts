@@ -1,12 +1,12 @@
 import type { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-if (!process.env.JWT_SECRET) {
-  throw new Error('FATAL: JWT_SECRET environment variable is not set.');
-}
-const JWT_SECRET: string = process.env.JWT_SECRET;
-
 export const authMiddleware = (req: any, res: Response, next: NextFunction) => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('FATAL: JWT_SECRET environment variable is not set.');
+  }
+  const JWT_SECRET: string = process.env.JWT_SECRET;
+
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {

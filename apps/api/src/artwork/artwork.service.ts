@@ -75,7 +75,7 @@ export class ArtworkService {
     }
 
     // 댓글 먼저 삭제 후 작품 삭제
-    await (prisma.comment as any).deleteMany({ where: { artworkId: id } });
+    await prisma.comment.deleteMany({ where: { artworkId: id } });
     return await prisma.artwork.delete({ where: { id } });
   }
 }

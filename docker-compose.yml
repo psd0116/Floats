@@ -11,6 +11,8 @@ services:
     volumes:
       - ./apps/web/src:/app/src
       - ./apps/web/index.html:/app/index.html
+    environment:
+      - VITE_API_URL=http://backend:4000
     restart: unless-stopped
     depends_on:
       - backend
@@ -30,6 +32,8 @@ services:
       - ./apps/api/prisma.config.ts:/app/prisma.config.ts
     env_file:
       - ./apps/api/.env
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@kids-art-app-db:5432/art_app
     restart: unless-stopped
     depends_on:
       - db
@@ -38,8 +42,8 @@ services:
   db:
     image: postgres:16-alpine
     container_name: kids-art-app-db
-    # ports:
-    #   - "5432:5432"  # DataGrip으로 외부 연결할 포트 (보안을 위해 주석 처리)
+    ports:
+      - "5432:5432"  # 로컬 백엔드(pnpm dev) 연결을 위해 주석 해제됨
     env_file:
       - ./apps/api/.env.db
     volumes:

@@ -3,13 +3,13 @@ import { prisma } from '../db/prisma.js';
 export class UserService {
   // 통계: 작품 수, 받은 댓글 수, 연속 그림 일수
   static async getMyStats(userId: string) {
-    const artworkCount = await (prisma.artwork as any).count({ where: { userId } });
-    const commentCount = await (prisma.comment as any).count({
+    const artworkCount = await prisma.artwork.count({ where: { userId } });
+    const commentCount = await prisma.comment.count({
       where: { artwork: { userId } }
     });
 
     // 연속 그림 일수 계산
-    const artworks = await (prisma.artwork as any).findMany({
+    const artworks = await prisma.artwork.findMany({
       where: { userId },
       select: { createdAt: true },
       orderBy: { createdAt: 'desc' }
@@ -53,7 +53,7 @@ export class UserService {
     twelveWeeksAgo.setDate(twelveWeeksAgo.getDate() - 84);
     twelveWeeksAgo.setHours(0, 0, 0, 0);
 
-    const artworks = await (prisma.artwork as any).findMany({
+    const artworks = await prisma.artwork.findMany({
       where: {
         userId,
         createdAt: { gte: twelveWeeksAgo }
@@ -84,12 +84,12 @@ export class UserService {
 
   // 뱃지: 조건 기반 계산 (DB 스키마 불필요)
   static async getBadges(userId: string) {
-    const artworkCount = await (prisma.artwork as any).count({ where: { userId } });
-    const publicCount = await (prisma.artwork as any).count({ where: { userId, isPublic: true } });
-    const commentCount = await (prisma.comment as any).count({ where: { userId } });
+    const artworkCount = await prisma.artwork.count({ where: { userId } });
+    const publicCount = await prisma.artwork.count({ where: { userId, isPublic: true } });
+    const commentCount = await prisma.comment.count({ where: { userId } });
 
     // 연속 일수 계산
-    const artworks = await (prisma.artwork as any).findMany({
+    const artworks = await prisma.artwork.findMany({
       where: { userId },
       select: { createdAt: true },
       orderBy: { createdAt: 'desc' }
@@ -127,7 +127,7 @@ export class UserService {
 
   // 가족 멤버 목록
   static async getFamilyMembers(familyCode: string) {
-    const members = await (prisma.user as any).findMany({
+    const members = await prisma.user.findMany({
       where: { familyCode },
       select: {
         id: true,
@@ -146,7 +146,7 @@ export class UserService {
 
   // 프로필 업데이트
   static async updateProfile(userId: string, data: { name?: string; avatar?: string }) {
-    return await (prisma.user as any).update({
+    return await prisma.user.update({
       where: { id: userId },
       data,
       select: { id: true, email: true, name: true, avatar: true, familyCode: true }

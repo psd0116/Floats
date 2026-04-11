@@ -32,7 +32,7 @@ export class UserController {
 
   static async getFamilyMembers(req: any, res: Response) {
     try {
-      const user = await (prisma.user as any).findUnique({
+      const user = await prisma.user.findUnique({
         where: { id: req.userId },
         select: { familyCode: true }
       });

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { Settings, LogOut, ChevronRight, Grid, List, Loader2, Copy, Check, X, Trash2, Globe, Lock, PenTool, Calendar as CalendarIcon, Users, Edit3, Star } from "lucide-react";
+import { Settings, LogOut, ChevronLeft, Grid, List, Loader2, Copy, X, Trash2, Globe, Lock, PenTool, Users, Edit3, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../types";
@@ -43,12 +43,16 @@ export default function MyPage() {
       ]);
 
       if (artRes.ok) setArtworks(await artRes.json());
-      if (authRes.ok) {
-        const userData = await authRes.json();
-        setUser({ ...userData, avatar: userData.avatar || '🐰' });
-        setEditName(userData.name || "");
-        setEditAvatar(userData.avatar || '🐰');
+      if (!authRes.ok) {
+        localStorage.removeItem("token");
+        navigate("/login");
+        return;
       }
+      
+      const userData = await authRes.json();
+      setUser({ ...userData, avatar: userData.avatar || '🐰' });
+      setEditName(userData.name || "");
+      setEditAvatar(userData.avatar || '🐰');
       if (statsRes.ok) setStats(await statsRes.json());
       if (badgesRes.ok) setBadges(await badgesRes.json());
       if (calRes.ok) setCalendar(await calRes.json());
@@ -141,7 +145,14 @@ export default function MyPage() {
   return (
     <div className="min-h-screen bg-[#F0F4F8] pb-24 font-sans selection:bg-accent-sky/30">
       {/* --- Profile Header --- */}
-      <section className="px-6 pt-14 pb-8 bg-white rounded-b-[40px] shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+      <section className="px-6 pt-10 pb-8 bg-white rounded-b-[40px] shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <button 
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 text-[#9CA3AF] hover:text-[#4B5563] mb-6 transition-colors font-bold text-sm"
+        >
+          <ChevronLeft className="w-5 h-5" />
+          메인으로 가기
+        </button>
         <div className="flex justify-between items-start mb-6">
           <div className="flex gap-4 items-center">
             <div className="relative group cursor-pointer" onClick={() => setIsProfileEdit(true)}>

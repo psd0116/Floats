@@ -2,10 +2,12 @@ import { prisma } from '../db/prisma.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-if (!process.env.JWT_SECRET) {
-  throw new Error('FATAL: JWT_SECRET environment variable is not set. Server cannot start safely.');
-}
-const JWT_SECRET: string = process.env.JWT_SECRET;
+const getJwtSecret = () => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('FATAL: JWT_SECRET environment variable is not set. Server cannot start safely.');
+  }
+  return process.env.JWT_SECRET;
+};
 
 export class AuthService {
   static async signup(email: string, password: string, name?: string, familyCode?: string) {
@@ -28,7 +30,7 @@ export class AuthService {
       },
     });
 
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user.id }, getJwtSecret(), { expiresIn: '7d' });
     return { token, user: { id: user.id, email: user.email, name: user.name, familyCode: user.familyCode } };
   }
 
@@ -43,7 +45,7 @@ export class AuthService {
       throw new Error('Invalid credentials');
     }
 
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user.id }, getJwtSecret(), { expiresIn: '7d' });
     return { token, user: { id: user.id, email: user.email, name: user.name, familyCode: user.familyCode } };
   }
 

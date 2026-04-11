@@ -37,7 +37,7 @@ export default function Login() {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      navigate("/");
+      navigate("/mypage");
     } catch (err: any) {
       setError(err.message);
     } finally {

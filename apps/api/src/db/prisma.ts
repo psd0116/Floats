@@ -7,4 +7,4 @@ const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:post
 const pool = new pg.Pool({ connectionString });
 const adapter = new PrismaPg(pool as any);
 
-export const prisma = new PrismaClient({ adapter } as any);
+export const prisma = new PrismaClient({ adapter });
